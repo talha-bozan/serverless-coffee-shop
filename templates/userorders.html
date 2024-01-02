@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/fav.png') }}">
+    <meta charset="UTF-8">
+    <title> Apollo Coffee</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700" rel="stylesheet"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <style>
+        :root {
+            --header-bg-url: url("{{ url_for('static', filename='img/header-bg.jpg') }}");
+        }
+
+        .table-container {
+        max-height: 500px; 
+        overflow-y: auto; 
+        overflow-x: hidden;
+        }
+
+        @media only screen and (max-width: 768px) {
+        .table-container {
+        overflow-x: auto; 
+        }
+        }
+    </style>
+    
+</head>
+    <body>
+
+          <header id="header" id="home">		  	
+            <div class="container">
+                <div class="row align-items-center justify-content-between d-flex">
+                    <div id="logo">
+                        <a href="{{ url_for('adminindex') }}"><img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" title="" /></a>
+                    </div>
+                      <nav id="nav-menu-container">
+                        <ul class="nav-menu">
+                            <li class="menu-active"><a href="{{ url_for('adminindex') }}">Home</a></li>
+                            <li><a href="{{ url_for('dashboard') }}">Add Product</a></li>
+                            <li><a href="{{ url_for('user_orders') }}">User Orders</a></li>
+                            <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                        </ul>
+                  </nav>		    		
+                </div>
+            </div>
+          </header>		
+                </div>
+            </div>
+          </header>
+
+
+        <section class="banner-area" id="home">    
+            <div class="container">
+                <div class="row fullscreen d-flex align-items-center justify-content-start">
+                    <div class="banner-content col-lg-7">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <h2 class="text-2xl mb-3"> User Orders</h2>
+                                <div class="table-container">
+
+                                {% if 'user_id' in session %}
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>User Name</th>
+                                            <th>Product ID</th>
+                                            <th>Quantity</th>
+                                            <th>Delivery Time</th>
+                                            <th>Order Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                      {% for order in currentOrderList %}
+                                          <tr>
+                                              <td>{{ order.user_full_name }}</td>
+                                              <td>{{ order.coffee_type }}</td>
+                                              <td>{{ order.quantity }}</td>
+                                              <td>{{ order.delivery_time }}</td>
+                                              <td>{{ order.date_time }}</td>
+                                          </tr>
+                                      {% endfor %}
+                                  </tbody>
+                                  
+                                </table>
+  
+                                {% endif %}
+                            </div>
+
+                            </div>
+                        </div>
+
+                    </div>                                          
+                </div>
+            </div>
+        </section>
+        <script src="{{ url_for('static', filename='js/jquery-2.2.4.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    </body>
+</html>
+
+
+
