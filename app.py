@@ -7,7 +7,7 @@ from flask import jsonify
 import json
 import datetime
 import time
-from modal import Stub, wsgi_app
+from modal import Stub, wsgi_app, Volume, NetworkFileSystem, Image, Mount
 
 
 from modal import Stub, Image
@@ -105,15 +105,7 @@ stub = Stub("web-hw5",
                 "zipp==3.17.0"
             )
 )
-
-
-@stub.function()
-@wsgi_app()
-def flask_app():
-    app = Flask(__name__ , template_folder='templates')
-    app.secret_key = os.urandom(24)
-
-    userApiData = {
+userApiData = {
         "apiKey": "AIzaSyAhs8VGY6wvs_kG5ujPdNkZAC7DAoTmPN4",
         "type": "service_account",
         "project_id": "web-test-aa01a",
@@ -129,11 +121,11 @@ def flask_app():
     }
 
 
-    cred = credentials.Certificate(userApiData)
+cred = credentials.Certificate(userApiData)
 
-    firebase_admin.initialize_app(cred)
+firebase_admin.initialize_app(cred)
 
-    firebase_config = {
+firebase_config = {
         "apiKey": "AIzaSyAhs8VGY6wvs_kG5ujPdNkZAC7DAoTmPN4",
         "authDomain": "web-test-aa01a.firebaseapp.com",
         "databaseURL": "https://web-test-aa01a-default-rtdb.firebaseio.com",
@@ -145,14 +137,18 @@ def flask_app():
     }
 
 
-    firebase = pyrebase.initialize_app(firebase_config)
+firebase = pyrebase.initialize_app(firebase_config)
 
-    auth1 = firebase.auth()
+auth1 = firebase.auth()
+db = firestore.client()
 
-    app = Flask(__name__)
+
+@stub.function(mounts=[Mount.from_local_dir("DATAS", remote_path="/root/DATAS")])
+@wsgi_app()
+def flask_app():
+
+    app = Flask(__name__ , template_folder="/root/DATAS/templates", static_folder="/root/DATAS/static")
     app.secret_key = os.urandom(24)
-    db = firestore.client()
-
 
     @app.route('/userindex')
     def userindex():
